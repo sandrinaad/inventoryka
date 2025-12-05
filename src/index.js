@@ -17,6 +17,9 @@ app.use('/users', usersRouter);
 const roleRouter = require('./role/role.controller');
 app.use('/role', roleRouter);
 
+const categoryRouter = require('./category/category.controller');
+app.use('/category', categoryRouter);
+
 app.listen(port, () => {
     console.log (`Server berhasil dijalankan di http://localhost:${port}`);
 });
