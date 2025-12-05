@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User{
+  id Int @id @default(autoincrement())
+  nama String
+  email String @unique
+  password String
+  role_id Int
+  role Role @relation(fields:[role_id], references:[id])
+  pengaduan Pengaduan[]
+  pengajuan Pengajuan[]
+}
+
+model Role{
+  id Int @id @default(autoincrement())
+  nama String
+  user User[]
+} 
+
+model Barang{
+  id Int @id @default(autoincrement())
+  kode String @unique
+  nama String
+  category_id Int 
+  category Category @relation(fields:[category_id], references:[id])
+  merk String
+  spesifikasi String
+  tahun_beli Int @db.Year
+  jumlah Int
+  harga Int
+  location_id Int
+  location Location @relation(fields:[location_id], references:[id])
+  condi_id Int
+  condition Condi @relation(fields:[condi_id], references:[id])
+  pengaduan Pengaduan[]
+}
+
+model Category{
+  id Int @id @default(autoincrement())
+  nama String
+  barang Barang[]
+  pengaduan Pengaduan[]
+  pengajuan Pengajuan[]
+}
+
+model Condi{
+  id Int @id @default(autoincrement())
+  nama String
+  barang Barang[]
+  pengaduan Pengaduan[]
+}
+
+model Location{
+  id Int @id @default(autoincrement())
+  nama String
+  barang Barang[]
+  pengaduan Pengaduan[]
+  pengajuan Pengajuan[]
+}
+
+enum StatusPengaduan{
+  Pending
+  Process
+  Repaired
+  Irreparable
+}
+
+model Pengaduan{
+  id Int @id @default(autoincrement())
+  tanggal DateTime
+  user_id Int
+  user User @relation(fields:[user_id], references:[id])
+  barang_id Int
+  barang Barang @relation(fields:[barang_id], references:[id])
+  category_id Int
+  category Category @relation(fields:[category_id], references:[id])
+  location_id Int
+  location Location @relation(fields:[location_id], references:[id])
+  condi_id Int
+  condition Condi @relation(fields:[condi_id], references:[id])
+  keterangan String
+  status StatusPengaduan
+}
+
+model Pengajuan{
+  id Int @id @default(autoincrement())
+  tanggal DateTime
+  user_id Int
+  user User @relation(fields:[user_id], references:[id])
+  nama_barang String
+  category_id Int
+  category Category @relation(fields:[category_id], references:[id])
+  jumlah Int
+  harga Int
+  location_id Int
+  location Location @relation(fields:[location_id], references:[id])
+  status StatusPengajuan
+}
+
+enum StatusPengajuan{
+  Pending
+  Accepted
+  Rejected
+}
