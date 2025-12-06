@@ -20,6 +20,15 @@ app.use('/role', roleRouter);
 const categoryRouter = require('./category/category.controller');
 app.use('/category', categoryRouter);
 
+const locationRouter = require('./location/location.controller');
+app.use('/location', locationRouter);
+
+const condiRouter = require('./condi/condi.controller');
+app.use('/condi', condiRouter);
+
+const barangRouter =  require('./barang/barang.controller');
+app.use('/barang', barangRouter);
+
 app.listen(port, () => {
     console.log (`Server berhasil dijalankan di http://localhost:${port}`);
 });
