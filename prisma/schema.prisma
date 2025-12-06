@@ -60,6 +60,7 @@ model Category{
 model Condi{
   id Int @id @default(autoincrement())
   nama String
+  deskripsi String
   barang Barang[]
   pengaduan Pengaduan[]
 }

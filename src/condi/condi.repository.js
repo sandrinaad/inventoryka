@@ -18,6 +18,7 @@ const insertCondi = async (condiData) => {
     const condi = await prisma.condi.create({
         data: {
             nama: condiData.nama,
+            deskripsi: condiData.deskripsi
         }
     });
     return condi;
@@ -38,6 +39,7 @@ const editCondi = async (condiId, condiData) => {
         },
         data: {
             nama: condiData.nama,
+            deskripsi: condiData.deskripsi
         }
     });
     return condi;
