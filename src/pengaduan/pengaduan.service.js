@@ -37,12 +37,18 @@ const updatePengaduanById = async (pengaduanId, pengaduanData) => {
     return pengaduan;
 }
 
+const updateStatusPengaduanById = async (pengaduanId, status) => {
+    await getPengaduanById(pengaduanId);
+    const pengaduan = await updateStatusPengaduan(pengaduanId, status);
+    return pengaduan;
+}
+
 module.exports = {
     getAllPengaduan,
     getPengaduanById,
     createPengaduan,
     deletePengaduanById,
-    updatePengaduanById
-
+    updatePengaduanById,
+    updateStatusPengaduanById
 };
 

@@ -54,10 +54,23 @@ const editPengaduan = async (pengaduanId, pengaduanData) => {
     return pengaduan;
 }
 
+const updateStatusPengaduan = async (pengaduanId, status) => {
+    const pengaduan = await prisma.pengaduan.update({
+        where: {
+            id: pengaduanId
+        },
+        data: {
+            status: status
+        }
+    });
+    return pengaduan;
+}
+
 module.exports = {
     findAllPengaduan,
     findPengaduanById,
     insertPengaduan,
     deletePengaduan,
-    editPengaduan
+    editPengaduan,
+    updateStatusPengaduan
 };

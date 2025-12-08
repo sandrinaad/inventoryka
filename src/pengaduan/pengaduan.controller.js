@@ -5,7 +5,8 @@ const {
     getPengaduanById,
     createPengaduan,
     deletePengaduanById,
-    updatePengaduanById 
+    updatePengaduanById,
+    updateStatusPengaduanById
 } = require('./pengaduan.service.js');
 
 router.get('/', async (req, res) =>{
@@ -53,6 +54,17 @@ router.put('/:pengaduanId', async (req, res) =>{
         const updatedPengaduan = req.body;
         const pengaduan = await updatePengaduanById(pengaduanId, updatedPengaduan);
         res.send({message: "pengaduan berhasil diperbarui", pengaduan: pengaduan});
+    } catch (error) {
+        res.status(400).send({error: error.message});
+    }
+});
+
+router.patch('/:pengaduanId/status', async (req, res) =>{
+    try {
+        const pengaduanId = parseInt (req.params.pengaduanId);
+        const { status } = req.body;
+        const pengaduan = await updateStatusPengaduanById(pengaduanId, status);
+        res.send({message: "Status pengaduan berhasil diperbarui", pengaduan: pengaduan});
     } catch (error) {
         res.status(400).send({error: error.message});
     }
