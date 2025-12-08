@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
+
+app.use(cookieParser());
 const port = 3000;
 
 
@@ -28,6 +30,12 @@ app.use('/condi', condiRouter);
 
 const barangRouter =  require('./barang/barang.controller');
 app.use('/barang', barangRouter);
+
+const pengajuanRouter = require('./pengajuan/pengajuan.controller');
+app.use('/pengajuan', pengajuanRouter);
+
+const pengaduanRouter = require('./pengaduan/pengaduan.controller');
+app.use('/pengaduan', pengaduanRouter);
 
 app.listen(port, () => {
     console.log (`Server berhasil dijalankan di http://localhost:${port}`);
