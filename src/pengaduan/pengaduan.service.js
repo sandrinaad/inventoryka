@@ -10,10 +10,10 @@ const getAllPengaduan = async () => {
 
 const getPengaduanById = async (pengaduanId) => {
     const pengaduan = await findPengaduanById(pengaduanId);
-    if (!condi) {
-        throw new Error('Condition not found');
+    if (!pengaduan) {
+        throw new Error('Pengaduan not found');
     }
-    return condi;
+    return pengaduan;
 }
 
 const createPengaduan = async (dataPengaduan, userId) => {
