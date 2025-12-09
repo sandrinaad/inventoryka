@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config(); 
+const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
 const port = 3000;
@@ -9,9 +10,12 @@ const port = 3000;
 
 app.use(express.json());
  
-app.get('/', (req, res) => {
-    res.send("<h1>Halo Dunia! Server Express pertama saya berjalan!</h1>");
-});
+const authRoutes = require('./auth/auth.routes');
+app.use("/auth", authRoutes);
+
+// app.get("/profile", authenticate, (req, res) => {
+//   res.json({ message: "Hello " + req.user.email });
+// });
 
 const usersRouter = require('./users/users.controller');
 app.use('/users', usersRouter);
