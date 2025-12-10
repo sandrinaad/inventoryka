@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllCondi,
     getCondiById,
@@ -8,12 +9,12 @@ const {
     updateCondiById 
 } = require('./condi.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     const condi = await getAllCondi();
     res.send(condi);
 });
 
-router.get('/:condiId', async (req, res) =>{
+router.get('/:condiId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const condiId = parseInt (req.params.condiId);   
         const condi = await getCondiById(condiId);
@@ -25,7 +26,7 @@ router.get('/:condiId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const newCondi = req.body;
         const condi = await createCondi(newCondi);
@@ -36,7 +37,7 @@ router.post('/', async (req, res) =>{
     
 });
 
-router.delete('/:condiId', async (req, res) =>{
+router.delete('/:condiId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const condiId = parseInt (req.params.condiId);
         await deleteCondiById(condiId);
@@ -47,7 +48,7 @@ router.delete('/:condiId', async (req, res) =>{
     }
 });
 
-router.put('/:condiId', async (req, res) =>{
+router.put('/:condiId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const condiId = parseInt (req.params.condiId);
         const updatedCondi = req.body;

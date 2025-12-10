@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllLocation,
     getLocationById,
@@ -8,12 +9,12 @@ const {
     updateLocationById 
 } = require('./location.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, async (req, res) =>{
     const location = await getAllLocation();
     res.send(location);
 });
 
-router.get('/:locationId', async (req, res) =>{
+router.get('/:locationId', authenticate, async (req, res) =>{
     try {
         const locationId = parseInt (req.params.locationId);   
         const location = await getLocationById(locationId);
@@ -25,7 +26,7 @@ router.get('/:locationId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const newLocation = req.body;
         const location = await createLocation(newLocation);
@@ -36,7 +37,7 @@ router.post('/', async (req, res) =>{
     
 });
 
-router.delete('/:locationId', async (req, res) =>{
+router.delete('/:locationId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const locationId = parseInt (req.params.locationId);
         await deleteLocationById(locationId);
@@ -47,7 +48,7 @@ router.delete('/:locationId', async (req, res) =>{
     }
 });
 
-router.put('/:locationId', async (req, res) =>{
+router.put('/:locationId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const locationId = parseInt (req.params.locationId);
         const updatedLocation = req.body;

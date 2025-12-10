@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllBarang,
     getBarangById,
@@ -8,12 +9,12 @@ const {
     updateBarangById 
 } = require('./barang.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, async (req, res) =>{
     const barang = await getAllBarang();
     res.send(barang);
 });
 
-router.get('/:barangId', async (req, res) =>{
+router.get('/:barangId', authenticate, async (req, res) =>{
     try {
         const barangId = parseInt (req.params.barangId);   
         const barang = await getBarangById(barangId);
@@ -25,7 +26,7 @@ router.get('/:barangId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, async (req, res) =>{
     try {
         const newBarang = req.body;
         const barang = await createBarang(newBarang);
@@ -36,11 +37,10 @@ router.post('/', async (req, res) =>{
                 message: "Kode barang sudah digunakan dan harus unik"
       });
     }
-    }
-    
+    }    
 });
 
-router.delete('/:barangId', async (req, res) =>{
+router.delete('/:barangId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const barangId = parseInt (req.params.barangId);
         await deleteBarangById(barangId);
@@ -51,7 +51,7 @@ router.delete('/:barangId', async (req, res) =>{
     }
 });
 
-router.put('/:barangId', async (req, res) =>{
+router.put('/:barangId', authenticate, async (req, res) =>{
     try {
         const barangId = parseInt (req.params.barangId);
         const updatedBarang = req.body;

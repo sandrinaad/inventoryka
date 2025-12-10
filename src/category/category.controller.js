@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllCategory,
     getCategoryById,
@@ -8,12 +9,12 @@ const {
     updateCategoryById 
 } = require('./category.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, async (req, res) =>{
     const category = await getAllCategory();
     res.send(category);
 });
 
-router.get('/:categoryId', async (req, res) =>{
+router.get('/:categoryId', authenticate, async (req, res) =>{
     try {
         const categoryId = parseInt (req.params.categoryId);   
         const category = await getCategoryById(categoryId);
@@ -25,7 +26,7 @@ router.get('/:categoryId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const newCategory = req.body;
         const category = await createCategory(newCategory);
@@ -36,7 +37,7 @@ router.post('/', async (req, res) =>{
     
 });
 
-router.delete('/:categoryId', async (req, res) =>{
+router.delete('/:categoryId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const categoryId = parseInt (req.params.categoryId);
         await deleteCategorybyId(categoryId);
@@ -47,7 +48,7 @@ router.delete('/:categoryId', async (req, res) =>{
     }
 });
 
-router.put('/:categoryId', async (req, res) =>{
+router.put('/:categoryId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const categoryId = parseInt (req.params.categoryId);
         const updatedCategory = req.body;

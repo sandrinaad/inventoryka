@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { prisma } = require ('../db/index.js');
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllUsers,
     getUsersById,
@@ -9,12 +9,12 @@ const {
     updateUserById 
 } = require('./users.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     const users = await getAllUsers();
     res.send(users);
 });
 
-router.get('/:userId', async (req, res) =>{
+router.get('/:userId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const userId = parseInt (req.params.userId);   
         const user = await getUsersById(userId);
@@ -26,7 +26,7 @@ router.get('/:userId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const newUser = req.body;
         const user = await createUser(newUser);
@@ -37,7 +37,7 @@ router.post('/', async (req, res) =>{
     
 });
 
-router.delete('/:userId', async (req, res) =>{
+router.delete('/:userId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const userId = parseInt (req.params.userId);
         await deleteUserbyId(userId);
@@ -48,7 +48,7 @@ router.delete('/:userId', async (req, res) =>{
     }
 });
 
-router.put('/:userId', async (req, res) =>{
+router.put('/:userId', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const userId = parseInt (req.params.userId);
         const updatedUser = req.body;

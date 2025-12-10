@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorizeRole } = require("../auth/auth.middleware");
 const { 
     getAllPengajuan,
     getPengajuanById,
@@ -9,12 +10,12 @@ const {
     updateStatusPengajuanById 
 } = require('./pengajuan.service.js');
 
-router.get('/', async (req, res) =>{
+router.get('/', authenticate, async (req, res) =>{
     const pengajuan = await getAllPengajuan();
     res.send(pengajuan);
 });
 
-router.get('/:pengajuanId', async (req, res) =>{
+router.get('/:pengajuanId', authenticate, async (req, res) =>{
     try {
         const pengajuanId = parseInt (req.params.pengajuanId);   
         const pengajuan = await getPengajuanById(pengajuanId);
@@ -26,7 +27,7 @@ router.get('/:pengajuanId', async (req, res) =>{
     
 });
 
-router.post('/', async (req, res) =>{
+router.post('/', authenticate, async (req, res) =>{
     try {
         const newPengajuan = req.body;
         const pengajuan = await createPengajuan(newPengajuan);
@@ -37,7 +38,7 @@ router.post('/', async (req, res) =>{
     
 });
 
-router.delete('/:pengajuanId', async (req, res) =>{
+router.delete('/:pengajuanId', authenticate, async (req, res) =>{
     try {
         const pengajuanId = parseInt (req.params.pengajuanId);
         await deletePengajuanById(pengajuanId);
@@ -48,7 +49,7 @@ router.delete('/:pengajuanId', async (req, res) =>{
     }
 });
 
-router.put('/:pengajuanId', async (req, res) =>{
+router.put('/:pengajuanId', authenticate, async (req, res) =>{
     try {
         const pengajuanId = parseInt (req.params.pengajuanId);
         const updatedPengajuan = req.body;
@@ -59,7 +60,7 @@ router.put('/:pengajuanId', async (req, res) =>{
     }
 });
 
-router.patch('/:pengajuanId/status', async (req, res) =>{
+router.patch('/:pengajuanId/status', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     try {
         const pengajuanId = parseInt (req.params.pengajuanId);
         const { status } = req.body;
