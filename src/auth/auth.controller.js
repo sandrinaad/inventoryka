@@ -3,11 +3,12 @@ const jwt = require("jsonwebtoken");
 const { prisma } = require('../db');
 require("dotenv").config();
 
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (req, res) => {
   try {
-    const { nama, email, password, role_id } = req.body;
+    const { nama, email, password } = req.body;
 
     const userExist = await prisma.user.findUnique({ where: { email } });
     if (userExist) return res.status(409).json({ message: "Email sudah digunakan" });
@@ -36,7 +37,7 @@ const login = async (req, res) => {
 
     // generate token
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role_id: user.role_id },
       JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES }
     );
