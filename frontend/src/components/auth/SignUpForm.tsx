@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
@@ -8,17 +8,42 @@ import Checkbox from "../form/input/Checkbox";
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [formData, setFormData] = useState({
+    nama: '',
+    email: '',
+    password: ''
+  });
+
+  const handlechange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  }
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); 
+    fetch('http://localhost:3000/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      alert('Registration successful!');
+      navigate('/login');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('Registration failed. Please try again.');
+    });
+  };
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-      <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
-        <Link
-          to="/"
-          className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-        >
-          <ChevronLeftIcon className="size-5" />
-          Back to dashboard
-        </Link>
-      </div>
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
           <div className="mb-5 sm:mb-8">
@@ -30,7 +55,7 @@ export default function SignUpForm() {
             </p>
           </div>
           <div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-5">
                   {/* <!-- First Name --> */}
                   <div className="sm:col-span-1">
@@ -40,11 +65,10 @@ export default function SignUpForm() {
                     <Input
                       type="text"
                       id="fname"
-                      name="fname"
-                      placeholder="Enter your name"
+                      name="name"
+                      placeholder="Enter your name" value={formData.name} onChange={handlechange}
                     />
                   </div>
-                  {/* <!-- Last Name --> *
                 {/* <!-- Email --> */}
                 <div>
                   <Label>
@@ -54,7 +78,7 @@ export default function SignUpForm() {
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email" value={formData.email} onChange={handlechange}
                   />
                 </div>
                 {/* <!-- Password --> */}
@@ -66,6 +90,9 @@ export default function SignUpForm() {
                     <Input
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handlechange}
+                      name="password"
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
@@ -114,10 +114,10 @@ export default function SignInForm() {
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Don&apos;t have an account? {""}
                 <Link
-                  to="/signup"
+                  to="/register"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
-                  Sign Up
+                  Register
                 </Link>
               </p>
             </div>
