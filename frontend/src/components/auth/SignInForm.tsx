@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
@@ -9,6 +9,42 @@ import Button from "../ui/button/Button";
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+ 
+  
+  const handlechange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); 
+    fetch('http://localhost:3000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      sessionStorage.setItem('token', data.token);
+      alert('Login successful!');
+      navigate('/');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('Login failed. Please try again.');
+    });
+  };
 
   return (
     <div className="flex flex-col flex-1">
@@ -23,22 +59,22 @@ export default function SignInForm() {
             </p>
           </div>
           <div>  
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-6">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="Enter your email" />
+                  <Input  placeholder="Enter your email"  name="email" value={formData.email} onChange={handlechange} />
                 </div>
                 <div>
                   <Label>
                     Password <span className="text-error-500">*</span>{" "}
                   </Label>
                   <div className="relative">
-                    <Input
+                    <Input value={formData.password} onChange={handlechange} name="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Enter your password" 
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}

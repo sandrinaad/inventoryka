@@ -9,6 +9,14 @@ const {
     updateUserById 
 } = require('./users.service.js');
 
+// import {authenticate, authorizeRole} from '../auth/auth.middleware.js';
+// import {getAllUsers,
+//     getUsersById,
+//     createUser,
+//     deleteUserbyId,
+//     updateUserById 
+// } from '../auth/auth.middleware.js';
+
 router.get('/', authenticate, authorizeRole(1, 2, 4), async (req, res) =>{
     const users = await getAllUsers();
     res.send(users);

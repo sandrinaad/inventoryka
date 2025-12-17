@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config(); 
 const cookieParser = require("cookie-parser");
-import.meta.env.VITE_API_URL
+
 
 app.use(cookieParser());
 const port = 3000;
